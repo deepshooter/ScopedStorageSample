@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             val isPrivate = binding.switchPrivate.isChecked
             if (isPrivate) {
                 val isSavedSuccessfully =
-                    it?.let { it1 -> savePhotoToInternalStorage(UUID.randomUUID().toString(), it1) }
+                    it?.let { bmp -> savePhotoToInternalStorage(UUID.randomUUID().toString(), bmp) }
                 if (isSavedSuccessfully == true) {
                     loadPhotosFromInternalStorageIntoRecyclerView()
                     Toast.makeText(this, "Photo Saved Successfully!", Toast.LENGTH_SHORT).show()
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     private suspend fun loadPhotosFromInternalStorage(): List<InternalStoragePhoto> {
         return withContext(Dispatchers.IO) {
             val files = filesDir.listFiles()
-            files?.filter { it.canRead() && it.isFile && it.endsWith(".jpg") }?.map {
+            files?.filter { it.canRead() && it.isFile && it.name.endsWith(".jpg") }?.map {
                 val bytes = it.readBytes()
                 val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                 InternalStoragePhoto(it.name, bmp)
